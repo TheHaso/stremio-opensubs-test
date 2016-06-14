@@ -43,20 +43,6 @@ function subsFind(args, cb) {
 // REFACTOR to replace subsFind with something that natively takes new request/response formats, and uses Jean's picking algo 
 // TODO
 
-//		OpenSubtitles.search({
-//			sublanguageid: 'all',
-//			hash: args.movieHash || null,
-//			filesize: args.movieByteSize || null,
-//			filename: args.tag || null,
-//			extensions: ['srt', 'vtt'],
-//			limit: 'best',
-//			imdbid: args.meta && args.meta.imdb_id ? args.meta.imdb_id : null,
-//			gzip: true                  // returns url to gzipped subtitles, defaults to false 
-//		}).then(function (subtitles) {
-			// an array of objects, no duplicates (ordered by 
-			// matching + uploader, with total downloads as fallback) 
-//		});
-
 var service = new addons.Server({
 	"subtitles.get": subsFind,
 	"subtitles.find": function(args, cb) {
