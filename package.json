@@ -5,6 +5,7 @@
   "description": "Stremio service for OpenSubtitles",
   "main": "index.js",
   "scripts": {
+    "start": "node ./index.js",
     "test": "mocha --reporter spec --timeout 10000",
     "postinstall": "if [ -n \"$STANDALONE\" ]; then npm install mongoose@4.x.x socks5-http-client@1.x.x; fi"
   },
