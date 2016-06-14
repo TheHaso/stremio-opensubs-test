@@ -1,0 +1,45 @@
+{
+  "name": "stremio-opensubtitles",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Stremio service for OpenSubtitles",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec --timeout 10000",
+    "postinstall": "if [ -n \"$STANDALONE\" ]; then npm install mongoose@4.x.x socks5-http-client@1.x.x; fi"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ivshti/stremio-opensubtitles"
+  },
+  "engine": "node 0.12.2",
+  "engines": {
+    "node": "0.12.0"
+  },
+  "keywords": [
+    "subtitles",
+    "opensubtitles",
+    "stremio"
+  ],
+  "author": "Ivo Georgiev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ivshti/stremio-opensubtitles/issues"
+  },
+  "homepage": "https://github.com/Ivshti/stremio-opensubtitles",
+  "dependencies": {
+    "async": "1.x.x",
+    "lodash": "3.8.x",
+    "moment": "^2.10.6",
+    "needle": "0.x.x",
+    "opensubtitles-api": "^3.1.1",
+    "subtitles-grouping": "1.1.x",
+    "optimist": "0.6.x",
+    "stremio-addons": "^1.28.0",
+    "xmlrpc": "1.x.x"
+  },
+  "devDependencies": {
+    "chai": "1.0.x",
+    "mocha": "1.4.x"
+  }
+}
