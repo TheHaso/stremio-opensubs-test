@@ -5,6 +5,7 @@
   "description": "Stremio service for OpenSubtitles",
   "main": "index.js",
   "scripts": {
+    "start": "node ./index.js",
     "test": "mocha --reporter spec --timeout 10000",
     "postinstall": "if [ -n \"$STANDALONE\" ]; then npm install mongoose@4.x.x socks5-http-client@1.x.x; fi"
   },
@@ -32,11 +33,10 @@
     "lodash": "3.8.x",
     "moment": "^2.10.6",
     "needle": "0.x.x",
-    "opensubtitles-api": "^3.1.1",
+    "opensubtitles-api": "^3.2.0",
     "subtitles-grouping": "1.1.x",
     "optimist": "0.6.x",
-    "stremio-addons": "^1.28.0",
-    "xmlrpc": "1.x.x"
+    "stremio-addons": "^1.28.0"
   },
   "devDependencies": {
     "chai": "1.0.x",
