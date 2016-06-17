@@ -33,11 +33,12 @@
     "lodash": "3.8.x",
     "moment": "^2.10.6",
     "needle": "0.x.x",
-    "opensubtitles-api": "^3.1.1",
+    "opensubtitles": "0.0.1",
     "subtitles-grouping": "1.1.x",
     "optimist": "0.6.x",
     "stremio-addons": "^1.28.0",
-    "xmlrpc": "1.x.x"
+    "xmlrpc": "1.x.x",
+    "opensubtitles-api": "^3.2.0"
   },
   "devDependencies": {
     "chai": "1.0.x",
