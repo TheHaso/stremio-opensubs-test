@@ -1,6 +1,5 @@
 var addons = require("stremio-addons");
 var http = require("http");
-var optimist = require("optimist");
 var _ = require("lodash");
 var moment = require("moment");
 var url = require("url");
@@ -39,9 +38,6 @@ function subsFind(args, cb) {
 	});		
 }
 
-// TODO
-// REFACTOR to replace subsFind with something that natively takes new request/response formats, and uses Jean's picking algo 
-// TODO
 
 var service = new addons.Server({
 	"subtitles.get": subsFind,
