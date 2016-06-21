@@ -71,7 +71,7 @@ var service = new addons.Server({
 		var pkg = require("./package"); 
 		cb(null, { name: pkg.name, version: pkg.version, stats: [{name: "subtitles", colour:"green"}], statsNum: "~ 3000000 subtitle files" });
 	}
-},  { stremioget: true, allow: ["http://api9.strem.io","http://api8.herokuapp.com"] }, require("./stremio-manifest"));
+},  { stremioget: true, allow: ["http://api9.strem.io"] }, require("./stremio-manifest"));
 
 /* Init server
  */
