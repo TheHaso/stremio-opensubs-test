@@ -71,7 +71,7 @@ var service = new addons.Server({
 
 /* Init server
  */
-if (module.parent) {
+if (require.main!=="stremio-opensubtitles") {
 	// TODO: this should be able to handle delay
 	service.proxySrtOrVtt = function(req, res) {
 		// req.params.delay
