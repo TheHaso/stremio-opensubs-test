@@ -2,7 +2,7 @@
  "name": "OpenSubtitles",
  "id": "com.linvo.opensubtitles", 
  "description": "The official add-on for subtitles from OpenSubtitles",
- "version": "0.0.1",
+ "version": "0.1.0",
  "types": ["series","movie"],
  "endpoint": "http://opensubtitles.strem.io/stremioget/stremio/v1",
  "logo": "http://www.strem.io/images/addons/opensubtitles-logo.png"
