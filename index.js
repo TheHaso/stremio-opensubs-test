@@ -69,36 +69,35 @@ var service = new addons.Server({
 	}
 },  { stremioget: true, allow: ["http://api9.strem.io"] }, require("./stremio-manifest"));
 
+// TODO: this should be able to handle delay
+service.proxySrtOrVtt = function(req, res) {
+	// req.params.delay
+	var isVtt = req.params.ext === "vtt"; // we can set it to false for srt
+	var query = url.parse(req.url, true).query;
+	service.request("subtitles.tracks", [{ stremioget: true }, { url: query.from }], function(err, handle) {
+		if (err) {
+			console.error(err);
+			res.writeHead(500);
+			res.end();
+			return;
+		}
+		if (isVtt) res.write("WEBVTT\n\n");
+		var format = function(d) {
+			return isVtt ? moment(d).utcOffset(0).format("HH:mm:ss.SSS") : moment(d).utcOffset(0).format("HH:mm:ss,SSS")
+		}
+		handle.tracks.forEach(function(track, i) {
+			res.write(i.toString()+"\n");
+			res.write(format(track.startTime) + " --> " + format(track.endTime) +"\n");
+			res.write(track.text.replace(/&/g, "&amp;")+"\n\n"); // TODO: sanitize?
+		});
+		res.end();
+	});
+}
+module.exports = service;
+
 /* Init server
  */
-if (require.main!=="stremio-opensubtitles") {
-	// TODO: this should be able to handle delay
-	service.proxySrtOrVtt = function(req, res) {
-		// req.params.delay
-		var isVtt = req.params.ext === "vtt"; // we can set it to false for srt
-		var query = url.parse(req.url, true).query;
-		service.request("subtitles.tracks", [{ stremioget: true }, { url: query.from }], function(err, handle) {
-			if (err) {
-				console.error(err);
-				res.writeHead(500);
-				res.end();
-				return;
-			}
-
-			if (isVtt) res.write("WEBVTT\n\n");
-			var format = function(d) {
-				return isVtt ? moment(d).utcOffset(0).format("HH:mm:ss.SSS") : moment(d).utcOffset(0).format("HH:mm:ss,SSS")
-			}
-			handle.tracks.forEach(function(track, i) {
-				res.write(i.toString()+"\n");
-				res.write(format(track.startTime) + " --> " + format(track.endTime) +"\n");
-				res.write(track.text.replace(/&/g, "&amp;")+"\n\n"); // TODO: sanitize?
-			});
-			res.end();
-		});
-	}
-	module.exports = service;
-} else {
+if (require.main==="stremio-opensubtitles") {
 	var server = http.createServer(function (req, res) {
 	  service.middleware(req, res, function() { res.end() });
 	}).listen(process.env.PORT || 3011).on("listening", function()
