@@ -57,7 +57,7 @@ var service = new addons.Server({
 					return x;
 				});
 			}).flatten().value();
-			callback(null, { id: args.query.videoHash || args.query.itemHash, all: all })
+			cb(null, { id: args.query.videoHash || args.query.itemHash, all: all })
 		});
 	},
 	"subtitles.tracks": tracks,
