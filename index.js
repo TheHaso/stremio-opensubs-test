@@ -14,7 +14,7 @@ if (process.env.WEB_CONCURRENCY && cluster.isMaster) {
 	cluster.on("exit", function(worker) {
 		console.log("worker %s died, restarting in 5s", worker.process.pid); 
 		setTimeout(function() { cluster.fork() }, 5*1000);
-  	});
+	});
 
 	return;
 }
@@ -50,13 +50,13 @@ var service = new addons.Server({
 			if (! (res && res.subtitles)) return cb(null, res);
 
 			var all = _.chain(res.subtitles).map(function(list, lang) { 
-                return (Array.isArray(list) ? list : []).map(function(x) {
-                	x.lang = lang;
-                	if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
-                	else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
-                	return x;
-                });
-            }).flatten().value();
+				return (Array.isArray(list) ? list : []).map(function(x) {
+					x.lang = lang;
+					if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
+					else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
+					return x;
+				});
+			}).flatten().value();
 			callback(null, { id: args.query.videoHash || args.query.itemHash, all: all })
 		});
 	},
