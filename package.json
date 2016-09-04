@@ -33,7 +33,7 @@
     "needle": "0.x.x",
     "opensubtitles": "0.0.1",
     "subtitles-grouping": "1.2.x",
-    "stremio-addons": "2.0.x",
+    "stremio-addons": "^2.5.1",
     "xmlrpc": "1.x.x"
   },
   "devDependencies": {
