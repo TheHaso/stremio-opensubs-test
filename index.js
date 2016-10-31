@@ -85,7 +85,7 @@ service.proxySrtOrVtt = function(req, res) {
 		var format = function(d) {
 			return isVtt ? moment(d).utcOffset(0).format("HH:mm:ss.SSS") : moment(d).utcOffset(0).format("HH:mm:ss,SSS")
 		};
-		var applOffset = offset ? function(d) { return new Date(d.getTime() + offset) } : function(d) { return d };
+		var applOffset = offset ? function(d) { return new Date(new Date(d).getTime() + offset) } : function(d) { return new Date(d); };
 		handle.tracks.forEach(function(track, i) {
 			res.write(i.toString()+"\n");
 			res.write(format(applOffset(track.startTime)) + " --> " + format(applOffset(track.endTime)) +"\n");
