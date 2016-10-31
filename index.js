@@ -69,11 +69,11 @@ var service = new addons.Server({
 	}
 },  { stremioget: true, allow: ["http://api9.strem.io"] }, require("./stremio-manifest"));
 
-// TODO: this should be able to handle delay
 service.proxySrtOrVtt = function(req, res) {
 	// req.params.delay
 	var isVtt = req.params.ext === "vtt"; // we can set it to false for srt
 	var query = url.parse(req.url, true).query;
+	var offset = query.offset ? parseInt(query.offset) : null;
 	service.request("subtitles.tracks", [{ stremioget: true }, { url: query.from }], function(err, handle) {
 		if (err) {
 			console.error(err);
@@ -84,10 +84,11 @@ service.proxySrtOrVtt = function(req, res) {
 		if (isVtt) res.write("WEBVTT\n\n");
 		var format = function(d) {
 			return isVtt ? moment(d).utcOffset(0).format("HH:mm:ss.SSS") : moment(d).utcOffset(0).format("HH:mm:ss,SSS")
-		}
+		};
+		var applOffset = offset ? function(d) { return new Date(d.getTime() + offset) } : function(d) { return d };
 		handle.tracks.forEach(function(track, i) {
 			res.write(i.toString()+"\n");
-			res.write(format(track.startTime) + " --> " + format(track.endTime) +"\n");
+			res.write(format(applOffset(track.startTime)) + " --> " + format(applOffset(track.endTime)) +"\n");
 			res.write(track.text.replace(/&/g, "&amp;")+"\n\n"); // TODO: sanitize?
 		});
 		res.end();
