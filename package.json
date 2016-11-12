@@ -30,7 +30,7 @@
     "async": "1.x.x",
     "underscore": "1.8.x",
     "moment": "^2.10.6",
-    "needle": "0.x.x",
+    "simple-get": "2.3.x",
     "opensubtitles": "0.0.1",
     "subtitles-grouping": "1.2.x",
     "stremio-addons": "^2.5.1",
