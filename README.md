@@ -16,13 +16,15 @@ This add-on has a function which it exports called `proxySrtOrVtt` which would p
 
 How to use with connect/express:
 
-```
+```javascript
 var subtitles = require("stremio-opensubtitles");
 app.get("/subtitles.:ext", subtitles.proxySrtOrVtt);
 ```
 
 Example on the front-end:
 
-```
-"http://localhost:8080/subtitles.vtt?from="+encodeURIComponent(urlToOpenSubtitlesGz)
+```javascript
+fetch("http://localhost:8080/subtitles.vtt?from="+encodeURIComponent(urlToOpenSubtitlesGz))
+.then(function(res) {  /* res will be an array of all subtitle tracks */})
+.catch(function(e) { console.error(e) })
 ```
