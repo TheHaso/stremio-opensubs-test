@@ -1,6 +1,6 @@
 {
   "name": "stremio-opensubtitles",
-  "version": "0.7.0",
+  "version": "0.8.2",
   "description": "Stremio service for OpenSubtitles",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,7 @@
     "moment": "^2.10.6",
     "simple-get": "2.3.x",
     "opensubtitles": "0.0.1",
-    "subtitles-grouping": "1.2.x",
+    "subtitles-grouping": "1.3.x",
     "stremio-addons": "^2.5.1",
     "xmlrpc": "1.x.x"
   },

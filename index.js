@@ -98,7 +98,7 @@ module.exports = service;
 
 /* Init server
  */
-if (require.main==="stremio-opensubtitles") {
+if (module.parent) { module.exports = service; } else {
 	var server = http.createServer(function (req, res) {
 	  service.middleware(req, res, function() { res.end() });
 	}).listen(process.env.PORT || 3011).on("listening", function()
