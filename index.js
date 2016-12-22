@@ -38,27 +38,61 @@ function subsGet(args, cb) {
 	});		
 }
 
+if (process.env.REDIS) {
+	// In redis
+	console.log("Using redis caching");
+
+	var redis = require("redis");
+	red = redis.createClient(process.env.REDIS);
+	red.on("error", function(err) { console.error("redis err",err) });
+
+	cacheGet = function (domain, key, cb) { 
+		red.get(domain+":"+key, function(err, res) { 
+			if (err) return cb(err);
+			if (process.env.CACHING_LOG) console.log("cache on "+domain+":"+key+": "+(res ? "HIT" : "MISS"));
+			if (!res) return cb(null, null);
+			try { cb(null, JSON.parse(res)) } catch(e) { cb(e) }
+		});
+	};
+	cacheSet = function (domain, key, value, ttl) {
+		var k = domain+":"+key
+		if (ttl) red.setex(k, ttl/1000, JSON.stringify(value), function(e) { if (e) console.error(e) });
+		else red.set(k, JSON.stringify(value), function(e) { if (e) console.error(e) });
+	}
+} else {
+	// In memory
+	cacheGet = function (domain, key, cb) { cb(null, null) }
+	cacheSet = function(domain, key, value, ttl) { }
+}
+
 function subsFindCached(args, cb) {
 	if (! args.query) return cb({ code: 13, message: "query required" });
 
 	var id = args.query.videoHash || args.query.itemHash;
 
-	subsGet(args, function(err, res) {
-		if (err) return cb(err);
-		if (! (res && res.subtitles)) return cb(null, res);
+	cacheGet("subtitles", id, function(err, subs) {
+		if (err) console.error(err);
+		if (subs) return cb(null, subs);
 
-		var all = _.chain(res.subtitles).map(function(list, lang) { 
-			return (Array.isArray(list) ? list : []).map(function(x) {
-				x.lang = lang;
-				if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
-				else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
-				return x;
-			});
-		}).flatten().value();
+		subsGet(args, function(err, res) {
+			if (err) return cb(err);
+			if (! (res && res.subtitles)) return cb(null, res);
 
-		var res = { id: id, all: all };
-		cb(null, res)
-	});
+			var all = _.chain(res.subtitles).map(function(list, lang) { 
+				return (Array.isArray(list) ? list : []).map(function(x) {
+					x.lang = lang;
+					if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
+					else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
+					return x;
+				});
+			}).flatten().value();
+
+			var res = { id: id, all: all };
+			var ttlHours = all.length < 10 ? 12 : (all.length < 40 ? 24 : 7*24 )
+			cacheSet("subtitles", id, res, ttlHours * 60 * 60 * 1000)
+			cb(null, res)
+		});
+	})
 }
 
 var service = new addons.Server({
