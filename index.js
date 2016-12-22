@@ -25,7 +25,7 @@ var find = require("./lib/find");
 var tracks = require("./lib/tracks");
 var hash = require("./lib/hash");
 
-function subsFind(args, cb) {
+function subsGet(args, cb) {
 	find(args, function(err, res) {
 		if (err || !res) return cb(err, res);
 
@@ -38,28 +38,32 @@ function subsFind(args, cb) {
 	});		
 }
 
+function subsFindCached(args, cb) {
+	if (! args.query) return cb({ code: 13, message: "query required" });
+
+	var id = args.query.videoHash || args.query.itemHash;
+
+	subsGet(args, function(err, res) {
+		if (err) return cb(err);
+		if (! (res && res.subtitles)) return cb(null, res);
+
+		var all = _.chain(res.subtitles).map(function(list, lang) { 
+			return (Array.isArray(list) ? list : []).map(function(x) {
+				x.lang = lang;
+				if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
+				else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
+				return x;
+			});
+		}).flatten().value();
+
+		var res = { id: id, all: all };
+		cb(null, res)
+	});
+}
 
 var service = new addons.Server({
-	"subtitles.get": subsFind,
-	"subtitles.find": function(args, cb) {
-
-		if (! args.query) return cb({ code: 13, message: "query required" });
-
-		subsFind(args, function(err, res) {
-			if (err) return cb(err);
-			if (! (res && res.subtitles)) return cb(null, res);
-
-			var all = _.chain(res.subtitles).map(function(list, lang) { 
-				return (Array.isArray(list) ? list : []).map(function(x) {
-					x.lang = lang;
-					if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
-					else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
-					return x;
-				});
-			}).flatten().value();
-			cb(null, { id: args.query.videoHash || args.query.itemHash, all: all })
-		});
-	},
+	"subtitles.get": subsGet,
+	"subtitles.find": subsFindCached,
 	"subtitles.tracks": tracks,
 	"subtitles.hash": hash,
 	"stats.get": function(args, cb, user) {
