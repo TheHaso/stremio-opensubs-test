@@ -82,8 +82,6 @@ function subsFindCached(args, cb) {
 			var all = _.chain(res.subtitles).map(function(list, lang) { 
 				return (Array.isArray(list) ? list : []).map(function(x) {
 					x.lang = lang;
-					if (res.blacklisted && res.blacklisted.indexOf(x.id) > -1) x.priority = -1;
-					else if (res.moviehash_picks && res.moviehash_picks.indexOf(x.id) > -1) x.priority = 1;
 					return x;
 				});
 			}).flatten().value();
