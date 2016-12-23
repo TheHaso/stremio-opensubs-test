@@ -55,13 +55,14 @@ if (process.env.REDIS) {
 
 // WARNING: Unfortunately we have to cache in the old format, as app requires it
 function subsGetCached(args, cb) {
-	if (! args.query) return cb({ code: 13, message: "query required" });
-
-	var id = args.query.videoHash || args.query.itemHash || args.query.item_hash; // item_hash is the obsolete property
+	if (! args.hash) return cb({ code: 13, message: "hash required" });
+	var id = args.hash; // item_hash is the obsolete property
 
 	cacheGet("subtitles-find", id, function(err, subs) {
 		if (err) console.error(err);
+
 		if (subs) return cb(null, subs);
+
 
 		find(args, function(err, res) {
 			if (err || !res) return cb(err, res);
