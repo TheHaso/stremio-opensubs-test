@@ -93,6 +93,16 @@ function subsGet(args, cb) {
 	})
 }
 
+var manifest = {
+	"name": "OpenSubtitles",
+	"id": "com.linvo.opensubtitles", 
+	"description": "The official add-on for subtitles from OpenSubtitles",
+	"version": require("./package").version,
+	"types": ["series","movie"],
+	"endpoint": "http://opensubtitles.strem.io/stremioget/stremio/v1",
+	"logo": "http://www.strem.io/images/addons/opensubtitles-logo.png"
+};
+
 var service = new addons.Server({
 	"subtitles.get": subsGet,
 	"subtitles.find": subsFindCached,
@@ -103,7 +113,7 @@ var service = new addons.Server({
 		var pkg = require("./package"); 
 		cb(null, { name: pkg.name, version: pkg.version, stats: [{name: "subtitles", colour:"green"}], statsNum: "~ 3000000 subtitle files" });
 	}
-},  { stremioget: true, allow: ["http://api9.strem.io"] }, require("./stremio-manifest"));
+},  { stremioget: true, allow: ["http://api9.strem.io"] }, manifest);
 
 service.proxySrtOrVtt = function(req, res) {
 	// req.params.delay
