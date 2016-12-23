@@ -53,50 +53,59 @@ if (process.env.REDIS) {
 	cacheSet = function(domain, key, value, ttl) { }
 }
 
-function subsGet(args, cb) {
-	find(args, function(err, res) {
-		if (err || !res) return cb(err, res);
-
-		// Do not serve .zip subtitles unless we explicitly allow it
-		if (!args.supportsZip) _.each(res.subtitles, function(group, key) {
-			res.subtitles[key] = group.filter(function(sub) { return sub.url && !sub.url.match("zip$") });
-		});
-
-		cb(err, res);
-	});		
-}
-
-function subsFindCached(args, cb) {
+// WARNING: Unfortunately we have to cache in the old format, as app requires it
+function subsGetCached(args, cb) {
 	if (! args.query) return cb({ code: 13, message: "query required" });
 
-	var id = args.query.videoHash || args.query.itemHash;
+	var id = args.query.videoHash || args.query.itemHash || args.query.item_hash; // item_hash is the obsolete property
 
-	cacheGet("subtitles", id, function(err, subs) {
+	cacheGet("subtitles-find", id, function(err, subs) {
 		if (err) console.error(err);
 		if (subs) return cb(null, subs);
 
-		subsGet(args, function(err, res) {
-			if (err) return cb(err);
-			if (! (res && res.subtitles)) return cb(null, res);
+		find(args, function(err, res) {
+			if (err || !res) return cb(err, res);
 
-			var all = _.chain(res.subtitles).map(function(list, lang) { 
-				return (Array.isArray(list) ? list : []).map(function(x) {
-					x.lang = lang;
-					return x;
-				});
-			}).flatten().value();
+			// Do not serve .zip subtitles unless we explicitly allow it
+			var count = 0;
+			_.each(res.subtitles, function(group, key) { count += group.length });
 
-			var res = { id: id, all: all };
-			var ttlHours = all.length < 10 ? 12 : (all.length < 40 ? 24 : 7*24 )
-			cacheSet("subtitles", id, res, ttlHours * 60 * 60 * 1000)
-			cb(null, res)
+			var ttlHours = count < 10 ? 12 : (count < 40 ? 24 : 7*24 )
+			cacheSet("subtitles-find", id, res, ttlHours * 60 * 60 * 1000)
+
+			if (!args.supportsZip) _.each(res.subtitles, function(group, key) {
+				res.subtitles[key] = group.filter(function(sub) { return sub.url && !sub.url.match("zip$") });
+			});
+
+			cb(err, res);
 		});
-	})
+	});
+}
+
+function subsFind(args, cb) {
+	if (! args.query) return cb({ code: 13, message: "query required" });
+
+	var id = args.query.videoHash || args.query.itemHash || args.query.item_hash; // item_hash is the obsolete property
+
+	subsGetCached(args, function(err, res) {
+		if (err) return cb(err);
+		if (! (res && res.subtitles)) return cb(null, { id: id, all: [] });
+
+		var all = _.chain(res.subtitles).map(function(list, lang) { 
+			return (Array.isArray(list) ? list : []).map(function(x) {
+				x.lang = lang;
+				return x;
+			});
+		}).flatten().value();
+
+		var res = { id: id, all: all };
+		cb(null, res)
+	});
 }
 
 var service = new addons.Server({
-	"subtitles.get": subsGet,
-	"subtitles.find": subsFindCached,
+	"subtitles.get": subsGetCached,
+	"subtitles.find": subsFind,
 	"subtitles.tracks": tracks,
 	"subtitles.hash": hash,
 	"stats.get": function(args, cb, user) {
