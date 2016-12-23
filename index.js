@@ -54,6 +54,7 @@ if (process.env.REDIS) {
 }
 
 function subsFindCached(args, cb) {
+	if (! args) return cb({ code: 14, message: "args required" });
 	if (! (args.query || args.hash)) return cb({ code: 13, message: "query/hash required" });
 
 	var id = args.hash ? args.hash : (args.query.videoHash || args.query.itemHash || args.query.item_hash); // item_hash is the obsolete property
@@ -63,7 +64,7 @@ function subsFindCached(args, cb) {
 		return subtitles;
 	}
 
-	cacheGet("subtitles-v2", id, function(err, subs) {
+	cacheGet("subtitles-v3", id, function(err, subs) {
 		if (err) console.error(err);
 
 		if (subs) return cb(null, prep(subs));
@@ -74,7 +75,7 @@ function subsFindCached(args, cb) {
 			// Do not serve .zip subtitles unless we explicitly allow it
 			var count = res.all.length;
 			var ttlHours = count < 10 ? 12 : (count < 40 ? 24 : 7*24 )
-			cacheSet("subtitles-v2", id, res, ttlHours * 60 * 60 * 1000)
+			cacheSet("subtitles-v3", id, res, ttlHours * 60 * 60 * 1000)
 
 			cb(err, prep(res));
 		});
