@@ -4,21 +4,6 @@ var _ = require("underscore");
 var moment = require("moment");
 var url = require("url");
 
-/* Clusterify */
-var cluster = require('cluster');
-if (process.env.WEB_CONCURRENCY && cluster.isMaster) {
-	var numCPUs = process.env.WEB_CONCURRENCY || require('os').cpus().length;
-
-	for (var i = 0; i < numCPUs; i++) { cluster.fork() }
-	
-	cluster.on("exit", function(worker) {
-		console.log("worker %s died, restarting in 5s", worker.process.pid); 
-		setTimeout(function() { cluster.fork() }, 5*1000);
-	});
-
-	return;
-}
-
 /* Basic glue
  */
 var find = require("./lib/find");
