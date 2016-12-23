@@ -25,18 +25,6 @@ var find = require("./lib/find");
 var tracks = require("./lib/tracks");
 var hash = require("./lib/hash");
 
-function subsGet(args, cb) {
-	find(args, function(err, res) {
-		if (err || !res) return cb(err, res);
-
-		// Do not serve .zip subtitles unless we explicitly allow it
-		if (!args.supportsZip) _.each(res.subtitles, function(group, key) {
-			res.subtitles[key] = group.filter(function(sub) { return sub.url && !sub.url.match("zip$") });
-		});
-
-		cb(err, res);
-	});		
-}
 
 if (process.env.REDIS) {
 	// In redis
@@ -63,6 +51,19 @@ if (process.env.REDIS) {
 	// In memory
 	cacheGet = function (domain, key, cb) { cb(null, null) }
 	cacheSet = function(domain, key, value, ttl) { }
+}
+
+function subsGet(args, cb) {
+	find(args, function(err, res) {
+		if (err || !res) return cb(err, res);
+
+		// Do not serve .zip subtitles unless we explicitly allow it
+		if (!args.supportsZip) _.each(res.subtitles, function(group, key) {
+			res.subtitles[key] = group.filter(function(sub) { return sub.url && !sub.url.match("zip$") });
+		});
+
+		cb(err, res);
+	});		
 }
 
 function subsFindCached(args, cb) {
