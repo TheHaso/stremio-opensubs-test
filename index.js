@@ -10,7 +10,7 @@ var find = require("./lib/find");
 var tracks = require("./lib/tracks");
 var hash = require("./lib/hash");
 
-
+var cacheGet, cacheSet;
 if (process.env.REDIS) {
 	// In redis
 	console.log("Using redis caching");
