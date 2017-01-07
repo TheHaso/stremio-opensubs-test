@@ -129,7 +129,7 @@ module.exports = service;
 
 /* Init server
  */
-if (module.parent) { module.exports = service; } else {
+if (require.main !== module) { module.exports = service; } else {
 	var server = http.createServer(function (req, res) {
 	  service.middleware(req, res, function() { res.end() });
 	}).listen(process.env.PORT || 3011).on("listening", function()
