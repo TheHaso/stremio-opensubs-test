@@ -136,4 +136,5 @@ if (module.parent) { module.exports = service; } else {
 	{
 		console.log("Subtitles listening on "+server.address().port);
 	});	
+	server.on("error", function(e) { console.error(e) });
 }
