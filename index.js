@@ -21,7 +21,7 @@ function subsFindCached(args, cb) {
 	if (! (args.query || args.hash)) return cb({ code: 13, message: "query/hash required" });
 
 	var id = args.hash ? args.hash : (args.query.videoHash || args.query.itemHash || args.query.item_hash); // item_hash is the obsolete property
-
+	
 	function prep(subtitles) {
 		if (!args.supportsZip) subtitles.all = subtitles.all.filter(function(sub) { return sub.url && !sub.url.match("zip$") });
 		return subtitles;
