@@ -21,7 +21,7 @@ function subsFindCached(args, cb) {
 	if (! (args.query || args.hash)) return cb({ code: 13, message: "query/hash required" });
 
 	var id = args.hash ? args.hash : (args.query.videoHash || args.query.itemHash || args.query.item_hash); // item_hash is the obsolete property
-	
+
 	function prep(subtitles) {
 		if (!args.supportsZip) subtitles.all = subtitles.all.filter(function(sub) { return sub.url && !sub.url.match("zip$") });
 		return subtitles;
@@ -71,7 +71,7 @@ var service = new addons.Server({
 	"subtitles.get": subsGet,
 	"subtitles.find": subsFindCached,
 	"subtitles.tracks": tracks,
-	"subtitles.hash": hash,
+	//"subtitles.hash": hash, // don't expose this, as stremio will send links to localhost:11470, which are not accessible when this add-on is hosted remotely
 	"stats.get": function(args, cb, user) {
 
 		var pkg = require("./package"); 
@@ -104,6 +104,7 @@ service.proxySrtOrVtt = function(req, res) {
 		res.end();
 	});
 }
+service.subtitlesHash = hash;
 module.exports = service;
 
 module.exports.setCaching = function(get, set) {

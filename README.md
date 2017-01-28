@@ -42,3 +42,15 @@ fetch("http://localhost:8080/subtitles.vtt?from="+encodeURIComponent(urlToOpenSu
 .then(function(res) {  /* res will be an array of all subtitle tracks */})
 .catch(function(e) { console.error(e) })
 ```
+
+
+## Expose `subtitles.hash`
+
+By default, this function is not exposed, because Stremio can possibly send `subtitles.hash` calls for `localhost:11470...` addresses, which this add-on cannot access when it's hosted remotely. 
+
+The local instance of this add-on will expose this method by using this code:
+
+```
+var subtitles = require('stremio-opensubtitles');
+subtitles.methods['subtitles.hash'] = subtitles.subtitlesHash;
+```
