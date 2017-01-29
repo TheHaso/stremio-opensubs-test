@@ -59,7 +59,7 @@ function subsGet(args, cb) {
 
 var manifest = {
 	"name": "OpenSubtitles",
-	"id": "com.linvo.opensubtitles", 
+	"id": "org.stremio.opensubtitles", 
 	"description": "The official add-on for subtitles from OpenSubtitles",
 	"version": require("./package").version,
 	"types": ["series","movie"],
