@@ -8,6 +8,20 @@ Functionalities include:
 * Calculate opensubtitles video hash for currently playing video
 * Load and parse an srt file into individual tracks
 
+## Using with Stremio
+
+This add-on is hosted at [opensubtitles.strem.io](http://opensubtitles.strem.io/stremio/v1) so you can go ahead and install it from there. 
+
+Alternatively, you can run locally by:
+
+```
+git clone http://github.com/Stremio/stremio-opensubtitles
+cd stremio-opensubtitles
+npm install
+npm run
+open http://localhost:3011/stremio/v1 # open in browser, install from there
+```
+
 ## Proxying to `vtt` or `srt`
 
 Often when building web applications, or doing casting to limited devices, it's important that we can serve a clean, UTF8 encoded `.srt` or `.vtt` file, often with CORS support.
@@ -27,4 +41,16 @@ Example on the front-end:
 fetch("http://localhost:8080/subtitles.vtt?from="+encodeURIComponent(urlToOpenSubtitlesGz))
 .then(function(res) {  /* res will be an array of all subtitle tracks */})
 .catch(function(e) { console.error(e) })
+```
+
+
+## Expose `subtitles.hash`
+
+By default, this function is not exposed, because Stremio can possibly send `subtitles.hash` calls for `localhost:11470...` addresses, which this add-on cannot access when it's hosted remotely. 
+
+The local instance of this add-on will expose this method by using this code:
+
+```
+var subtitles = require('stremio-opensubtitles');
+subtitles.methods['subtitles.hash'] = subtitles.subtitlesHash;
 ```
