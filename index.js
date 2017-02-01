@@ -81,7 +81,7 @@ var service = new addons.Server({
 
 service.proxySrtOrVtt = function(req, res) {
 	// req.params.delay
-	var isVtt = req.params.ext === "vtt"; // we can set it to false for srt
+	var isVtt = req.url.match('^/subtitles.vtt'); // we can set it to false for srt
 	var query = url.parse(req.url, true).query;
 	var offset = query.offset ? parseInt(query.offset) : null;
 	service.request("subtitles.tracks", [{ stremioget: true }, { url: query.from }], function(err, handle) {
@@ -116,6 +116,7 @@ module.exports.setCaching = function(get, set) {
  */
 if (require.main !== module) { module.exports = service; } else {
 	var server = http.createServer(function (req, res) {
+          if (req.url.match("^/subtitles.vtt")) return service.proxySrtOrVtt(req, res);
 	  service.middleware(req, res, function() { res.end() });
 	}).listen(process.env.PORT || 3011).on("listening", function()
 	{
