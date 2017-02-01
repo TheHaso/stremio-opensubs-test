@@ -116,7 +116,7 @@ module.exports.setCaching = function(get, set) {
  */
 if (require.main !== module) { module.exports = service; } else {
 	var server = http.createServer(function (req, res) {
-          if (req.url.match("^/subtitles.vtt")) return service.proxySrtOrVtt(req, res);
+          if (req.url.match("^/subtitles.vtt") || req.url.match("^/subtitles.srt")) return service.proxySrtOrVtt(req, res);
 	  service.middleware(req, res, function() { res.end() });
 	}).listen(process.env.PORT || 3011).on("listening", function()
 	{
