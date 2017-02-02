@@ -18,7 +18,7 @@ Alternatively, you can run locally by:
 git clone http://github.com/Stremio/stremio-opensubtitles
 cd stremio-opensubtitles
 npm install
-npm run
+npm start
 open http://localhost:3011/stremio/v1 # open in browser, install from there
 ```
 
@@ -43,6 +43,7 @@ fetch("http://localhost:8080/subtitles.vtt?from="+encodeURIComponent(urlToOpenSu
 .catch(function(e) { console.error(e) })
 ```
 
+*NOTE:* in standalone mode (running via `npm start`), those endpoints (`/subtitles.vtt`, `/subtitles.srt`) will be accessible by default.
 
 ## Expose `subtitles.hash`
 
