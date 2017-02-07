@@ -51,7 +51,7 @@ By default, this function is not exposed, because Stremio can possibly send `sub
 
 The local instance of this add-on will expose this method by using this code:
 
-```
+```javascript
 var subtitles = require('stremio-opensubtitles');
 subtitles.methods['subtitles.hash'] = subtitles.subtitlesHash;
 ```
