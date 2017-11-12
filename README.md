@@ -55,3 +55,19 @@ The local instance of this add-on will expose this method by using this code:
 var subtitles = require('stremio-opensubtitles');
 subtitles.methods['subtitles.hash'] = subtitles.subtitlesHash;
 ```
+
+
+## Using with caching
+
+Set the ``REDIS`` environment variable to a ``redis://`` link in order to enable caching.
+
+Use ``CACHING_LOG`` env var (set to any value) to debug caching
+
+
+
+## Building and deploying
+
+``npm run docker-build``
+
+``npm run docker-push``
+

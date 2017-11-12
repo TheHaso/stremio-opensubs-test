@@ -4,8 +4,10 @@
   "description": "Stremio service for OpenSubtitles",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.js",
-    "test": "tape tests/*"
+    "start": "node ./index-caching.js",
+    "test": "tape tests/*",
+    "docker-build": "docker build --tag=stremio/stremio-opensubtitles .",
+    "docker-push": "docker push stremio/stremio-opensubtitles"
   },
   "repository": {
     "type": "git",
