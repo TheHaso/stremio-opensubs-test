@@ -1,7 +1,7 @@
 {
-  "name": "stremio-opensubtitles",
-  "version": "0.16.2",
-  "description": "Stremio service for OpenSubtitles",
+  "name": "stremio-opensubtitles-test",
+  "version": "0.16.2.test",
+  "description": "Stremio service for OpenSubtitles test with proxy",
   "main": "index.js",
   "scripts": {
     "start": "node ./index-caching.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ivshti/stremio-opensubtitles"
+    "url": "https://github.com/TheHaso/stremio-opensubs-test"
   },
   "keywords": [
     "subtitles",
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/Ivshti/stremio-opensubtitles/issues"
   },
-  "homepage": "https://github.com/Ivshti/stremio-opensubtitles",
+  "homepage": "https://github.com/TheHaso/stremio-opensubs-test",
   "dependencies": {
     "async": "1.x.x",
     "moment": "^2.10.6",
