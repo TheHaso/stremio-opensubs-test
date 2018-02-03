@@ -58,12 +58,12 @@ function subsGet(args, cb) {
 }
 
 var manifest = {
-	"name": "OpenSubtitles",
-	"id": "org.stremio.opensubtitles", 
-	"description": "The official add-on for subtitles from OpenSubtitles",
+	"name": "OpenSubtitles.Test",
+	"id": "org.stremio.opensubtitles.test", 
+	"description": "Test add-on for subtitles",
 	"version": require("./package").version,
 	"types": ["series","movie"],
-	"endpoint": "http://opensubtitles.strem.io/stremioget/stremio/v1",
+	"endpoint": "https://subtitle-test.herokuapp.com/",
 	"logo": "http://www.strem.io/images/addons/opensubtitles-logo.png"
 };
 
